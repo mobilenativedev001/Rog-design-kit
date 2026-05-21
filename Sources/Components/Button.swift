@@ -27,16 +27,18 @@ public struct RDSButton: View {
                     .padding(.vertical, RDSToken.Spacing.medium)
                     .padding(.horizontal, RDSToken.Spacing.large)
                     .background(Color(RDSToken.Color.primary))
-                    .cornerRadius(8)
+                    .cornerRadius(20)
             }
         } else if variant == .secondary {
             Button(action: action) {
                 Text(title)
-                    .foregroundColor(Color(UIColor.white))
+                    .foregroundColor(Color(RDSToken.Color.secondary))
                     .padding(.vertical, RDSToken.Spacing.medium)
                     .padding(.horizontal, RDSToken.Spacing.large)
-                    .background(Color(RDSToken.Color.secondary))
-                    .cornerRadius(8)
+                    .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(RDSToken.Color.secondary), lineWidth: 2)
+                            )
             }
         }
     }
