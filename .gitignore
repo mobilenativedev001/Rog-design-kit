@@ -1,0 +1,21 @@
+# Xcode
+build/
+DerivedData/
+*.xcworkspace
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad
+
+# SwiftPM
+/.build/
+/Packages/
+
+# macOS
+.DS_Store
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+
+# tokens and generated files (may be committed depending on workflow)
+# /Sources/Tokens/Generated/

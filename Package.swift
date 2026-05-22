@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "RogersDesignSystem",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(name: "Core", targets: ["Core"]),
         .library(name: "Tokens", targets: ["Tokens"]),
