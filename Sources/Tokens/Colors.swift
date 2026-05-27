@@ -28,13 +28,11 @@ public enum RDSToken {
 
         // MARK: - SwiftUI-friendly tokens
         public static var primaryColor: SwiftUI.Color { swiftUIColor(fromUIColor: primary) }
-        public static var secondaryColor: SwiftUI.Color { swiftUIColor(fromUIColor: secondary) }
         public static var successColor: SwiftUI.Color { swiftUIColor(fromUIColor: success) }
         public static var warningColor: SwiftUI.Color { swiftUIColor(fromUIColor: warning) }
         public static var errorColor: SwiftUI.Color { swiftUIColor(fromUIColor: error) }
 
         public static var backgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: background) }
-        public static var surfaceColor: SwiftUI.Color { swiftUIColor(fromUIColor: surface) }
         public static var borderColor: SwiftUI.Color { swiftUIColor(fromUIColor: border) }
 
         public static var textPrimaryColor: SwiftUI.Color { swiftUIColor(fromUIColor: textPrimary) }
@@ -42,22 +40,14 @@ public enum RDSToken {
         public static var textDisabledColor: SwiftUI.Color { swiftUIColor(fromUIColor: textDisabled) }
 
         // MARK: - Text field semantic UIColor tokens (sourced from Figma Chatr-POC node 5:481)
-        /// Border when the field is focused — Figma `--ds-br-feedback-callout` (#6E339E).
-        public static var fieldBorderFocused: UIColor { dynamicColor(light: Palette.purple450, dark: Palette.purple300, highContrastLight: Palette.purple500, highContrastDark: Palette.purple200) }
         /// Border for the idle (resting) state — reuses the generic border token.
-        public static var fieldBorderDefault: UIColor { border }
-        /// Border and helper-text color in the error state — reuses semantic error.
-        public static var fieldBorderError: UIColor { error }
-        /// Background fill of the text field container.
-        public static var fieldBackground: UIColor { surface }
         /// Background fill when the field is disabled.
-        public static var fieldBackgroundDisabled: UIColor { dynamicColor(light: Palette.gray50, dark: Palette.gray900, highContrastLight: Palette.gray30, highContrastDark: Palette.gray950) }
+        private static var fieldBackgroundDisabled: UIColor { dynamicColor(light: Palette.gray50, dark: Palette.gray900, highContrastLight: Palette.gray30, highContrastDark: Palette.gray950) }
 
         // Text field SwiftUI.Color convenience
-        public static var fieldBorderFocusedColor: SwiftUI.Color { swiftUIColor(fromUIColor: fieldBorderFocused) }
-        public static var fieldBorderDefaultColor: SwiftUI.Color { swiftUIColor(fromUIColor: fieldBorderDefault) }
-        public static var fieldBorderErrorColor: SwiftUI.Color  { swiftUIColor(fromUIColor: fieldBorderError) }
-        public static var fieldBackgroundColor: SwiftUI.Color  { swiftUIColor(fromUIColor: fieldBackground) }
+        public static var fieldBorderFocusedColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.purple450, dark: Palette.purple300, highContrastLight: Palette.purple500, highContrastDark: Palette.purple200)) }
+        public static var fieldBorderDefaultColor: SwiftUI.Color { borderColor }
+        public static var fieldBackgroundColor: SwiftUI.Color  { swiftUIColor(fromUIColor: surface) }
         public static var fieldBackgroundDisabledColor: SwiftUI.Color { swiftUIColor(fromUIColor: fieldBackgroundDisabled) }
 
         // MARK: - Typography / brand text tokens (sourced from Figma node 5:441)
@@ -73,18 +63,6 @@ public enum RDSToken {
         // MARK: - Button semantic UIColor tokens (sourced from Figma Chatr-POC design)
         /// Solid fill for primary CTA buttons — Rogers brand purple (#542E91).
         public static var buttonPrimaryBackground: UIColor { dynamicColor(light: Palette.purple500, dark: Palette.purple300, highContrastLight: Palette.purple700, highContrastDark: Palette.purple200) }
-        /// Pressed / active state for primary buttons.
-        public static var buttonPrimaryPressedBackground: UIColor { dynamicColor(light: Palette.purple600, dark: Palette.purple400, highContrastLight: Palette.purple700, highContrastDark: Palette.purple300) }
-        /// Solid fill for secondary buttons — reuses teal brand color.
-        public static var buttonSecondaryBackground: UIColor { secondary }
-        /// Pressed state for secondary buttons.
-        public static var buttonSecondaryPressedBackground: UIColor { dynamicColor(light: Palette.teal600, dark: Palette.teal200, highContrastLight: Palette.teal600, highContrastDark: Palette.teal200) }
-        /// Pressed state for destructive buttons.
-        public static var buttonDestructivePressedBackground: UIColor { dynamicColor(light: Palette.red700, dark: Palette.red300, highContrastLight: Palette.red700, highContrastDark: Palette.red300) }
-        /// Background for any disabled button.
-        public static var buttonDisabledBackground: UIColor { dynamicColor(light: Palette.gray200, dark: Palette.gray700, highContrastLight: Palette.gray300, highContrastDark: Palette.gray600) }
-        /// Foreground (label/icon) for any disabled button.
-        public static var buttonDisabledForeground: UIColor { textDisabled }
 
         // MARK: - Promo banner semantic tokens (sourced from Figma node 128:60)
         /// Background for the promotional offer banner strip — deep brand purple (#55228A).
@@ -98,12 +76,12 @@ public enum RDSToken {
 
         // MARK: - Button SwiftUI.Color convenience
         public static var buttonPrimaryBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonPrimaryBackground) }
-        public static var buttonPrimaryPressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonPrimaryPressedBackground) }
-        public static var buttonSecondaryBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonSecondaryBackground) }
-        public static var buttonSecondaryPressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonSecondaryPressedBackground) }
-        public static var buttonDestructivePressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonDestructivePressedBackground) }
-        public static var buttonDisabledBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonDisabledBackground) }
-        public static var buttonDisabledForegroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonDisabledForeground) }
+        public static var buttonPrimaryPressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.purple600, dark: Palette.purple400, highContrastLight: Palette.purple700, highContrastDark: Palette.purple300)) }
+        public static var buttonSecondaryBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: secondary) }
+        public static var buttonSecondaryPressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.teal600, dark: Palette.teal200, highContrastLight: Palette.teal600, highContrastDark: Palette.teal200)) }
+        public static var buttonDestructivePressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.red700, dark: Palette.red300, highContrastLight: Palette.red700, highContrastDark: Palette.red300)) }
+        public static var buttonDisabledBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.gray200, dark: Palette.gray700, highContrastLight: Palette.gray300, highContrastDark: Palette.gray600)) }
+        public static var buttonDisabledForegroundColor: SwiftUI.Color { textDisabledColor }
 
 
         // MARK: - Helpers
