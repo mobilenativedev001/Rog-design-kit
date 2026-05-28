@@ -27,6 +27,8 @@ This catalog covers every public component and module in the Rogers iOS Design S
 | `DSPromoBanner` | `Components` | Promo / status strip | Offer cards, plan headers, status alerts | `offer` · `success` · `warning` · `info` · `custom`; icon optional | `DSPromoBannerHostingController`, `DSPromoBannerView` |
 | `DSInfoTile` | `Components` | Promotional product tile | Campaign cards with promo banner + image + product copy | Banner icon optional; image optional placeholder; supports custom content text | `DSInfoTileHostingController`, `DSInfoTileView` |
 | `DSTabBar` | `Components` | App-shell navigation | 3–5 destination persistent bottom navigation | `DSTabBarBadge`: none / dot / count; selected / unselected / disabled | `DSTabBarHostingController`, `DSTabBarView` |
+| `DSActionTile` | `Components` | Feature status card | Service/feature toggles, account dashboards | `DSActionTileStatus`: active · inactive · warning · error · neutral; optional action button | `DSActionTileHostingController`, `DSActionTileView` |
+| `DSCompactTile` | `Components` | Metric progress card | Data usage, storage metrics, multi-metric dashboards | Progress bar 0–100%; optional leading icon; optional action button | `DSCompactTileHostingController`, `DSCompactTileView`, `DSCompactTileFactory` |
 
 ---
 
@@ -385,6 +387,172 @@ VStack(spacing: 0) {
 
 ---
 
+### DSInfoTile
+
+- **Module:** `Components`
+- **Purpose:** Promotional product tile combining a top offer banner (via `DSPromoBanner`), a media/image area, brand name, product title, description, and an optional secondary CTA button. Matches Figma node 128:209.
+- **Use when:** A campaign card needs promo strip + image + structured product copy + an optional "Shop now" style action.
+- **Avoid when:** The content is a status indicator (`DSActionTile`), a metric card (`DSCompactTile`), or a simple full-width banner (`DSPromoBanner`).
+- **Key API:**
+
+```swift
+// Figma-exact preset
+DSInfoTile(configuration: .specialOffer())
+
+// Custom product tile
+DSInfoTile(
+    configuration: DSInfoTileConfiguration(
+        badgeText: "Special Offer for you",
+        brandText: "Apple",
+        titleText: "iPhone 17 Pro Max",
+        descriptionText: "Save up to $1,000 when you trade in your eligible device",
+        secondaryButtonTitle: "Shop now"
+    ),
+    onSecondaryButtonTap: { navigateToShop() }
+)
+```
+
+- **Companion types:**
+  - `DSInfoTileConfiguration` — `badgeText`, `badgeIconSystemName`, `brandText`, `titleText`, `descriptionText`, `secondaryButtonTitle`, `image`
+  - Factory preset: `.specialOffer(badgeText:brandText:titleText:descriptionText:secondaryButtonTitle:image:)`
+
+- **Variants and states:** Badge variant fixed to `.offer` (deep brand purple). Optional `image` with placeholder fill. Optional secondary `DSButton` with `.outline` style.
+
+- **Accessibility notes:** Single combined element when no button; exposes contained elements when a secondary button is present. `imageAccessibilityLabel` provides image context to VoiceOver.
+- **SwiftUI example:**
+
+```swift
+VStack(spacing: 0) {
+    DSInfoTile(configuration: .specialOffer(secondaryButtonTitle: "Learn more")) {
+        navigateToProductDetails()
+    }
+}
+.padding(16)
+.background(Color(RDSToken.Color.surface))
+.cornerRadius(12)
+```
+
+- **UIKit integration:** `DSInfoTileHostingController`, `DSInfoTileView`, `DSInfoTileFactory.makeSpecialOfferTile(...)`.
+- **Works well with:** `DSPromoBanner` (shares the offer variant), `DSButton`, `DSLabel` for surrounding context.
+- **Screen-building notes:** Embed in a horizontal scroll or vertical stack on a plans/promotions screen. The tile width should be constrained (≈380 pt) by the parent.
+
+---
+
+### DSActionTile
+
+- **Module:** `Components`
+- **Purpose:** Horizontal card displaying a leading icon, primary title, semantic status text, and an optional outline action button. Used for feature toggles, service status, and account management rows. Matches Figma node 128:199.
+- **Use when:** A screen needs to show a feature/service state (active, inactive, warning, error, neutral) with an optional activation or management CTA.
+- **Avoid when:** No status context exists (use `DSLabel`), or the layout needs a vertical card (tile is horizontal-only).
+- **Key API:**
+
+```swift
+// With action button
+DSActionTile(
+    icon: Image(systemName: "airplane"),
+    title: "Roaming",
+    status: "Not Active",
+    statusType: .inactive,
+    buttonTitle: "Activate now"
+) { activateRoaming() }
+
+// Display-only (no button)
+DSActionTile(
+    icon: Image(systemName: "checkmark.circle.fill"),
+    title: "Unlimited Data",
+    status: "Active",
+    statusType: .active
+)
+
+// Configuration-based
+DSActionTile(configuration: config) { handleAction() }
+```
+
+- **Companion types:**
+  - `DSActionTileConfiguration` — `icon`, `title`, `status`, `statusType`, `buttonTitle`, accessibility fields
+  - `DSActionTileStatus` — `active` (green) · `inactive` (red) · `warning` (amber) · `error` (red) · `neutral` (gray)
+
+- **Variants and states:** Status text color is driven by `DSActionTileStatus`. Button is always `.outline` variant and `.medium` size (fixed). No loading state — the action triggers immediately.
+
+- **Accessibility notes:** Combined element with default label `"{title}, {status}"`. Override with `accessibilityLabel` for complex status descriptions.
+- **SwiftUI example:**
+
+```swift
+VStack(spacing: 16) {
+    DSActionTile(icon: Image(systemName: "checkmark.circle.fill"),
+                 title: "Data Plan", status: "Active", statusType: .active)
+    DSActionTile(icon: Image(systemName: "airplane"),
+                 title: "Roaming", status: "Not Active", statusType: .inactive,
+                 buttonTitle: "Activate now") { activateRoaming() }
+    DSActionTile(icon: Image(systemName: "exclamationmark.triangle.fill"),
+                 title: "Payment", status: "Attention Required", statusType: .warning,
+                 buttonTitle: "Review") { reviewPayment() }
+}
+.padding()
+```
+
+- **UIKit integration:** `DSActionTileHostingController` for `UIViewController` embedding; `DSActionTileView` for cells and stack views. Use `embed(in:configuration:)` quick-embed helper.
+- **Works well with:** `DSPageHeader` (section heading), `DSCompactTile` (metric tiles in the same dashboard), `DSPromoBanner` (status alert above the tile list).
+- **Screen-building notes:** Stack multiple `DSActionTile` instances vertically with 16 pt spacing for account management or feature toggle lists.
+
+---
+
+### DSCompactTile
+
+- **Module:** `Components`
+- **Purpose:** Compact metric card showing a title, headline metric value, supporting detail text, and an animated horizontal progress bar. Derived from Figma node 128:177. Designed for data usage, storage, and quota summaries.
+- **Use when:** A screen needs to display a numeric metric (percentage, ratio, value) alongside a progress visualization in a compact footprint.
+- **Avoid when:** The content is a binary on/off status (use `DSActionTile`), or no numeric progress is involved.
+- **Key API:**
+
+```swift
+// Figma-exact data usage preset
+DSCompactTile(configuration: .dataUsage())
+
+// Custom metric
+DSCompactTile(
+    title: "Cloud Storage",
+    valueText: "40%",
+    detailText: "40 GB of 100 GB is used",
+    progress: 0.4,
+    leadingIconSystemName: "externaldrive.fill",
+    actionIconSystemName: "chevron.right",
+    onActionTap: { navigateToStorage() }
+)
+```
+
+- **Companion types:**
+  - `DSCompactTileConfiguration` — `title`, `valueText`, `detailText`, `progress`, `leadingIconSystemName`, `actionIconSystemName`, `showsActionButton`
+  - Factory preset: `.dataUsage(title:valueText:detailText:progress:)`
+
+- **Variants and states:** Progress value clamped to `[0, 1]`. Action button optional (circle icon). Leading icon optional. All colors token-driven (`compactTileBackground`, `compactTileBorder`, `compactTileProgressFill`, etc.).
+
+- **Accessibility notes:** Single combined element. `accessibilityValue` reports progress as `"{N} percent"`. Progress bar is hidden from accessibility tree — percentage is announced via value.
+- **SwiftUI example:**
+
+```swift
+ScrollView(.horizontal, showsIndicators: false) {
+    HStack(spacing: 12) {
+        DSCompactTile(configuration: .dataUsage(progress: 0.63))
+        DSCompactTile(
+            title: "Talk Time",
+            valueText: "40%",
+            detailText: "120 of 300 min used",
+            progress: 0.4,
+            leadingIconSystemName: "phone.fill",
+            showsActionButton: false
+        )
+    }
+    .padding(.horizontal, 16)
+}
+```
+
+- **UIKit integration:** `DSCompactTileHostingController`, `DSCompactTileView`. `DSCompactTileFactory.makeDataUsageTile(progress:onActionTap:)` for the standard data-usage tile.
+- **Works well with:** `DSActionTile` (complementary status card in same dashboard), `DSPageHeader` (section context), `DSLabel` (metric labels or section headings).
+- **Screen-building notes:** Constrain tile width at the call site (≈200 pt). Use in horizontal scroll rows or 2-column grids on account or home screens.
+
+---
+
 ## Common Screen Recipes
 
 ---
@@ -549,6 +717,62 @@ struct ContactFormView: View {
 
 ---
 
+### Service Management / Account Dashboard
+
+**Goal:** Present a home or account screen with usage metrics and actionable service tiles below a page header.
+
+**Component stack:** `DSPageHeader` → horizontal `DSCompactTile` row → vertical `DSActionTile` list → optional `DSPromoBanner` status alert
+
+```swift
+ScrollView {
+    VStack(alignment: .leading, spacing: 20) {
+        DSPageHeader(title: "My Account")
+            .padding(.horizontal, 24)
+
+        DSLabel("Usage this period",
+                style: RDSToken.Typography.title4,
+                color: .primary)
+            .padding(.horizontal, 24)
+
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                DSCompactTile(configuration: .dataUsage(progress: 0.63))
+                DSCompactTile(
+                    title: "Talk Time",
+                    valueText: "40%",
+                    detailText: "120 of 300 min",
+                    progress: 0.4,
+                    leadingIconSystemName: "phone.fill",
+                    showsActionButton: false
+                )
+            }
+            .padding(.horizontal, 16)
+        }
+
+        DSLabel("Services", style: RDSToken.Typography.title4, color: .primary)
+            .padding(.horizontal, 24)
+
+        VStack(spacing: 16) {
+            DSActionTile(
+                icon: Image(systemName: "checkmark.circle.fill"),
+                title: "Data Plan", status: "Active", statusType: .active,
+                buttonTitle: "Manage"
+            ) { managePlan() }
+
+            DSActionTile(
+                icon: Image(systemName: "airplane"),
+                title: "Roaming", status: "Not Active", statusType: .inactive,
+                buttonTitle: "Activate now"
+            ) { activateRoaming() }
+        }
+        .padding(.horizontal, 16)
+    }
+    .padding(.vertical, 20)
+}
+```
+
+---
+
 ## UIKit Integration Notes
 
 All UIKit wrappers follow the same two-surface pattern:
@@ -575,6 +799,9 @@ All UIKit wrappers follow the same two-surface pattern:
 | `DSTextField` | `DSTextFieldHostingController` | `DSTextFieldView` | — |
 | `DSPromoBanner` | `DSPromoBannerHostingController` | `DSPromoBannerView` | `DSPromoBannerFactory` |
 | `DSTabBar` | `DSTabBarHostingController` | `DSTabBarView` | — |
+| `DSInfoTile` | `DSInfoTileHostingController` | `DSInfoTileView` | `DSInfoTileFactory` |
+| `DSActionTile` | `DSActionTileHostingController` | `DSActionTileView` | — |
+| `DSCompactTile` | `DSCompactTileHostingController` | `DSCompactTileView` | `DSCompactTileFactory` |
 
 Full UIKit reference: `Docs/UIKitCompat.md`.
 
