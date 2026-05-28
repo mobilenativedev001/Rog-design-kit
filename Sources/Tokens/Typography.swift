@@ -286,6 +286,33 @@ public extension RDSToken {
             uiFontTextStyle: .subheadline
         )
 
+        // MARK: Compact tile scale
+
+        /// TedNext-DemiBold 16/24 pt — compact tile title style.
+        public static let compactTileTitle = DSTextStyle(
+            fontName: "TedNext-DemiBold",
+            size: 16,
+            lineHeight: 24,
+            uiFontTextStyle: .headline
+        )
+
+        /// TedNext-Bold 42/46 pt — compact tile headline metric style.
+        public static let compactTileMetric = DSTextStyle(
+            fontName: "TedNext-Bold",
+            size: 42,
+            lineHeight: 46,
+            letterSpacing: -0.3,
+            uiFontTextStyle: .largeTitle
+        )
+
+        /// TedNext-Medium 14/21 pt — compact tile supporting detail style.
+        public static let compactTileDetail = DSTextStyle(
+            fontName: "TedNext-Medium",
+            size: 14,
+            lineHeight: 21,
+            uiFontTextStyle: .subheadline
+        )
+
         // MARK: Utility scale
 
         /// TedNext-Medium 12/16 pt — inline hints, badges, timestamps.

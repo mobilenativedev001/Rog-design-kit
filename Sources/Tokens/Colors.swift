@@ -74,6 +74,34 @@ public enum RDSToken {
         public static var promoBannerBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: promoBannerBackground) }
         public static var promoBannerForegroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: promoBannerForeground) }
 
+        // MARK: - Compact tile semantic tokens (sourced from Figma node 128:177)
+        /// Card background for compact usage/metric tiles.
+        public static var compactTileBackground: UIColor { surface }
+        /// Border for compact usage/metric tiles.
+        public static var compactTileBorder: UIColor { border }
+        /// Background for leading icon and trailing action affordances.
+        public static var compactTileAccessoryBackground: UIColor {
+            dynamicColor(light: Palette.gray30, dark: Palette.gray700, highContrastLight: Palette.gray50, highContrastDark: Palette.gray600)
+        }
+        /// Foreground for leading icon and trailing action affordances.
+        public static var compactTileAccessoryForeground: UIColor { textSecondary }
+        /// Progress track background.
+        public static var compactTileProgressTrack: UIColor {
+            dynamicColor(light: Palette.gray150, dark: Palette.gray700, highContrastLight: Palette.gray200, highContrastDark: Palette.gray600)
+        }
+        /// Progress fill accent.
+        public static var compactTileProgressFill: UIColor {
+            dynamicColor(light: Palette.purpleAccent450, dark: Palette.purple300, highContrastLight: Palette.purple500, highContrastDark: Palette.purple200)
+        }
+
+        // Compact tile SwiftUI convenience
+        public static var compactTileBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileBackground) }
+        public static var compactTileBorderColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileBorder) }
+        public static var compactTileAccessoryBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileAccessoryBackground) }
+        public static var compactTileAccessoryForegroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileAccessoryForeground) }
+        public static var compactTileProgressTrackColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileProgressTrack) }
+        public static var compactTileProgressFillColor: SwiftUI.Color { swiftUIColor(fromUIColor: compactTileProgressFill) }
+
         // MARK: - Button SwiftUI.Color convenience
         public static var buttonPrimaryBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: buttonPrimaryBackground) }
         public static var buttonPrimaryPressedBackgroundColor: SwiftUI.Color { swiftUIColor(fromUIColor: dynamicColor(light: Palette.purple600, dark: Palette.purple400, highContrastLight: Palette.purple700, highContrastDark: Palette.purple300)) }
@@ -105,6 +133,7 @@ public enum RDSToken {
 
     // MARK: - Spacing tokens (moved here so Tokens module centralizes tokens in one place)
     public enum Spacing {
+        public static let xxSmall: CGFloat = 4
         public static let small: CGFloat = 8
         public static let medium: CGFloat = 16
         public static let large: CGFloat = 24
@@ -164,6 +193,7 @@ private enum Palette {
     static let purple300 = UIColor(hex: "#9E7EC8")  // dark-mode default
     static let purple400 = UIColor(hex: "#7A5BB3")  // dark-mode pressed
     static let purple450 = UIColor(hex: "#6E339E")  // callout / field focus (ds-br-feedback-callout)
+    static let purpleAccent450 = UIColor(hex: "#A349FF") // compact tile progress fill (Figma node 128:177)
     static let purple475 = UIColor(hex: "#5D2894")  // brand text / title colour (Figma ds-title-3 node 5:441)
     static let purple500 = UIColor(hex: "#542E91")  // light-mode primary (#542e91 Figma)
     static let purple550 = UIColor(hex: "#55228A")  // promo banner bg (Figma node 128:60 #55228A)
