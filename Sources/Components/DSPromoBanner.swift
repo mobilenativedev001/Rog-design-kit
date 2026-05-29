@@ -210,6 +210,7 @@ public struct DSPromoBanner: View {
             configuration.variant.backgroundColor
                 .frame(maxWidth: .infinity)
                 .frame(minHeight: configuration.minHeight)
+                .frame(maxHeight: 50)
 
             HStack(spacing: configuration.iconTextSpacing) {
                 if let iconName = configuration.iconName {
